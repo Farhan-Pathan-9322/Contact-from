@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <form id="contactForm">
+            <h2>Contact Us</h2>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Message to display after form submission -->
+        <p id="responseMessage" style="display: none;">Your data has been submitted successfully!</p>
+    </div>
+
+    <script>
+        // Handling the form submission using JavaScript
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from redirecting
+
+            // Get form data
+            const formData = new FormData(this);
+            const data = new URLSearchParams();
+            for (const pair of formData) {
+                data.append(pair[0], pair[1]);
+            }
+
+            // Send form data to Google Apps Script using fetch
+            fetch('https://script.google.com/macros/s/AKfycbzLk43V13t2YGNjl4QlEJrttWgB-vT02anscy6NjT8r6JvFP0QXWHX1Ci-k0xACEVU/exec', {
+                method: 'POST',
+                body: data,
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Display success message
+                document.getElementById('responseMessage').style.display = 'block';
+                
+                // Clear the form fields
+                document.getElementById('contactForm').reset();
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+            });
+        });
+    </script>
+</body>
+</html>
